@@ -1,0 +1,753 @@
+{
+  "name": "Hackathon Common Workspace",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Google Spreadsheet URL: [here](https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=0)",
+        "width": 264
+      },
+      "id": "c6850764-371c-4863-821e-2ff85f3cf24a",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        340,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1377223150,
+          "mode": "list",
+          "cachedResultName": "Responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=1377223150"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Summaries": "={{ $json.Summaries[0].message.content }}",
+            "Questions": "={{ $json.Questions[0].message.content }}"
+          },
+          "matchingColumns": [
+            "Summaries"
+          ],
+          "schema": [
+            {
+              "id": "Summaries",
+              "displayName": "Summaries",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Bulletpoints",
+              "displayName": "Bulletpoints",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Questions",
+              "displayName": "Questions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "02d33481-de8d-4d15-aa2e-2bbf083ba8a9",
+      "name": "Google Sheets1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.3,
+      "position": [
+        1680,
+        180
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "0J99xgTBby2C5nhu",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=1377223150",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1377223150,
+          "mode": "list",
+          "cachedResultName": "Responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=1377223150"
+        },
+        "clear": "specificRows",
+        "startIndex": 2,
+        "rowsToDelete": 100
+      },
+      "id": "610d2136-c13b-4c5f-833c-aa480a24099b",
+      "name": "Google Sheets2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.3,
+      "position": [
+        1520,
+        180
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "0J99xgTBby2C5nhu",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.argo.hestia.ai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer MYsnFsXBgUmBSYo5zQiNMeXosq2ffyFlfOSSADW1miU"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "body": "={   \"messages\": [     {       \"content\":  {{ JSON.stringify($json[\"Transcripts\"]) }}, \"type\": \"human\" }   ],   \"model\": \"string\",   \"max_tokens\": 0,   \"temperature\": 0,   \"top_p\": 0,   \"frequency_penalty\": 0,   \"presence_penalty\": 0,   \"stop\": \"string\",   \"stream\": false } ",
+        "options": {}
+      },
+      "id": "56054568-f00a-401e-ad69-9759fe987db3",
+      "name": "Argo Summarize Bot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        840,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.argo.hestia.ai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer QHaCtPebIYifJoQvbMkF8XGFeQ53QeTCQ6btyuJAD64"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "=",
+        "body": "={   \"messages\": [     {       \"content\":  {{ JSON.stringify($json.choices[0].message.content) }}, \"type\": \"human\" }   ],   \"model\": \"string\",   \"max_tokens\": 0,   \"temperature\": 0,   \"top_p\": 0,   \"frequency_penalty\": 0,   \"presence_penalty\": 0,   \"stop\": \"string\",   \"stream\": false } ",
+        "options": {}
+      },
+      "id": "c7164fdc-494b-4ced-8056-977704c26957",
+      "name": "Argo Question Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1020,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1710875146,
+          "mode": "list",
+          "cachedResultName": "Bulletpoints",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=1710875146"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Bulletpoints": "={{ $json.choices[0].message.content }}"
+          },
+          "matchingColumns": [
+            "Bulletpoints"
+          ],
+          "schema": [
+            {
+              "id": "Bulletpoints",
+              "displayName": "Bulletpoints",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c609412d-8d97-4c00-8df5-e4ed843996cd",
+      "name": "Google Sheets4",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.3,
+      "position": [
+        1660,
+        740
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "0J99xgTBby2C5nhu",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "1b6974f4-93e4-40bf-bd5f-71c2a2a99d70",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1320,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "choices",
+              "newKey": "Summaries"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "id": "1a2cc15d-753e-443d-83ad-a48d6f54df0b",
+      "name": "Rename Keys",
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "choices",
+              "newKey": "Questions"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "id": "22436c87-f163-47e9-82f5-fa8f81afdf56",
+      "name": "Rename Keys1",
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.argo.hestia.ai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 9t7MrCX8slivZKW_p_to-uW3YiSTyluVbGOnhbNjevA"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "=",
+        "body": "={   \"messages\": [     {       \"content\":  {{ JSON.stringify($json.text) }}, \"type\": \"human\" }   ],   \"model\": \"string\",   \"max_tokens\": 0,   \"temperature\": 0,   \"top_p\": 0,   \"frequency_penalty\": 0,   \"presence_penalty\": 0,   \"stop\": \"string\",   \"stream\": false } ",
+        "options": {}
+      },
+      "id": "2716b26c-b033-4fb6-9632-12225c4713f6",
+      "name": "Argo Bullentpints Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1200,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=1377223150",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1710875146,
+          "mode": "list",
+          "cachedResultName": "Bulletpoints",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=1710875146"
+        },
+        "clear": "specificRows",
+        "startIndex": 2,
+        "rowsToDelete": 100
+      },
+      "id": "ce51161d-0250-41db-ac30-b16f8efae812",
+      "name": "Google Sheets3",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.3,
+      "position": [
+        1420,
+        640
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "0J99xgTBby2C5nhu",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "additionalFields": {}
+      },
+      "id": "ccf5a217-7196-483d-b17c-7af84d00c231",
+      "name": "WhatsApp Business Cloud",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2db39892-ece4-445e-a0ad-3d57e83a23d1",
+      "name": "Facebook Graph API",
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [
+        1800,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Tabellenblatt1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "ec7e5ab3-75d3-43ff-b694-862f16eafaaa",
+      "name": "Transcripts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.3,
+      "position": [
+        720,
+        20
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleApi": {
+          "id": "0J99xgTBby2C5nhu",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a614c281-be89-4733-8524-23d89caf20ce",
+      "name": "Human Validation",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        1580,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1Y6mguKA5NnKUrIP5ULTt9hpSN0tEu_Xf",
+          "mode": "list",
+          "cachedResultName": "chpped.mp3",
+          "cachedResultUrl": "https://drive.google.com/file/d/1Y6mguKA5NnKUrIP5ULTt9hpSN0tEu_Xf/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "id": "fa24051b-1baf-4e9a-804c-62dae2da4dc8",
+      "name": "Google Drive1",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        220,
+        560
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "0J99xgTBby2C5nhu",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "57da0900-0904-4422-8623-36820cdb3d1b",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        260,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 694013929,
+          "mode": "list",
+          "cachedResultName": "Audio Transcripts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=694013929"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Bulletpoints": "={{ $json.choices[0].message.content }}"
+          },
+          "matchingColumns": [
+            "Bulletpoints"
+          ],
+          "schema": [
+            {
+              "id": "Bulletpoints",
+              "displayName": "Bulletpoints",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a8b9bb82-68d5-4d55-91ef-3f315ecedc89",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.3,
+      "position": [
+        980,
+        780
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "0J99xgTBby2C5nhu",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=1377223150",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 694013929,
+          "mode": "list",
+          "cachedResultName": "Audio Transcripts",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/13B9XiYbZGCJZ3MkeGqq0uaVT7TBUpFixy-tz53ZQJDU/edit#gid=694013929"
+        },
+        "clear": "specificRows",
+        "startIndex": 2,
+        "rowsToDelete": 100
+      },
+      "id": "6aa8e2d5-f59a-4f01-9f66-5fac0c6acbff",
+      "name": "Google Sheets5",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.3,
+      "position": [
+        760,
+        760
+      ],
+      "credentials": {
+        "googleApi": {
+          "id": "0J99xgTBby2C5nhu",
+          "name": "Google Service Account account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "fr"
+        }
+      },
+      "id": "a4ff4ab9-a05c-42a1-a923-7babaa6e19e5",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        420,
+        560
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "JAmvmTME8pusn28B",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets2": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Argo Question Agent": {
+      "main": [
+        [
+          {
+            "node": "Rename Keys1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Argo Summarize Bot": {
+      "main": [
+        [
+          {
+            "node": "Argo Question Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Rename Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Human Validation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Keys1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Argo Bullentpints Agent": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets3": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human Validation": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp Business Cloud",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Facebook Graph API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets5": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Argo Summarize Bot",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Argo Bullentpints Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "26c588ca-8f5e-43a4-8e65-9cf870b2abeb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5829908d3204e024085e1502a280dc27042e1ff7c6a12a33f7085587ed924acd"
+  },
+  "id": "FKsl6XqgeOoiCnu4",
+  "tags": []
+}
